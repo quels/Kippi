@@ -1,4 +1,1 @@
-{
-"title":"test",
-"function":"def test(): print('testing DB')"
-}
+"test":"print(test)"
