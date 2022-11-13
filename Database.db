@@ -1,2 +1,2 @@
-tes:print('test')
-test2:print('FML')
+%$tes;print('test');
+%$test2;print('FML');
