@@ -11,7 +11,7 @@ class Tool:
 # Global varibles
 args = sys.argv
 args.pop(0)
-g = Github("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")
+g = Github("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")
 repo = g.get_repo("quels/Kippi")
 
 def Logo():
@@ -23,9 +23,10 @@ def Logo():
 
 def startup():
     Logo()
-    print("FOR HELP WRITE : kippi.py -h")
-    #print(args)
-    PrintOptions()
+    print()
+    if len(args) < 1:
+        print("FOR HELP WRITE : kippi.py -h")
+        PrintOptions()
     TranslateArgs()
 
 def TranslateArgs():
@@ -44,19 +45,23 @@ def TranslateArgs():
                 AddTool()
             else:
                 print("-u [File directory] : upload file")
+
+def RunFunction():
+    eval(getDB().split('\n')[int(args[1]) - 1].split(':')[1])
+
 def help():
     print("-----------------KIPPI DICTUNAURY--------------")
     print("-r [number tool] : run")
     print("-h : help")
     print("-u [File directory] : upload file")
     print("-l : Load latest database")
+
 def PrintOptions():
     counter = 1
-    options = getDB().split(',')
+    options = getDB().split('\n')
     for option in options:
         print(f"[{counter}] {option.split(':')[0]}")
         counter+= 1
-
 
 def LoadDB():
     try:
@@ -70,22 +75,22 @@ def LoadDB():
         WriteDB(content)
     
 def AddTool():
-
     if args[1].split('.')[1] == "db":
         LoadDB()
-        WriteDB(getDB() + "," + open(args[1]).read())
-        updatedContent = base64.b64decode(getDB().encode('ASCII')).decode('ASCII')
-        repo.update_file("Database.db","Updated with " + args[1],updatedContent,repo.get_contents("Database.db").sha,"main")
+        WriteDB("\n" + open(args[1],"r").read())
+        updatedContent = base64.b64encode(getDB().encode('ASCII')).decode('ASCII')
+        repo.update_file("Database.db","Updated with " + args[1],getDB(),repo.get_contents("Database.db").sha,"main")
     else:
         print("only database File!")
 
 def WriteDB(text):
     db = open("Database.db","a")
     db.write(text)
+
 def getDB():
     db = open("Database.db","r")
-    print(db.read())
     return db.read()
+
 if __name__ == '__main__':
     if not os.path.exists("Database.db"):
         LoadDB()
