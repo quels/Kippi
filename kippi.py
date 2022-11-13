@@ -11,7 +11,7 @@ class Tool:
 # Global varibles
 args = sys.argv
 args.pop(0)
-g = Github("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")
+g = Github("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")
 repo = g.get_repo("quels/Kippi")
 
 def Logo():
@@ -47,7 +47,7 @@ def TranslateArgs():
                 print("-u [File directory] : upload file")
 
 def RunFunction():
-    eval(getDB().split('\n')[int(args[1]) - 1].split(':')[1])
+    eval(getDB().split('%$')[int(args[1]) - 1].split(';')[1])
 
 def help():
     print("-----------------KIPPI DICTUNAURY--------------")
@@ -58,9 +58,10 @@ def help():
 
 def PrintOptions():
     counter = 1
-    options = getDB().split('\n')
+    options = getDB().split('%$')
+    options.pop(0)
     for option in options:
-        print(f"[{counter}] {option.split(':')[0]}")
+        print(f"[{counter}] {option.split(';')[0]}")
         counter+= 1
 
 def LoadDB():
@@ -73,13 +74,24 @@ def LoadDB():
         content = repo.get_contents("Database.db")
         content = content.decoded_content.decode('utf-8')
         WriteDB(content)
-    
+
+def BuildDirectory():
+    dir = "" # dir = directory
+    tempArgs = args
+    tempArgs.pop(0)
+    for arg in tempArgs:
+        dir += arg + " "
+    return dir
 def AddTool():
-    if args[1].split('.')[1] == "db":
+    dir = ""
+    dir = BuildDirectory()
+    print(f"uploading {dir}...")
+    if dir.split('.')[1] == "db ":
         LoadDB()
-        WriteDB("\n" + open(args[1],"r").read())
+        WriteDB("\n%$" + open(dir,"r").read())
         updatedContent = base64.b64encode(getDB().encode('ASCII')).decode('ASCII')
         repo.update_file("Database.db","Updated with " + args[1],getDB(),repo.get_contents("Database.db").sha,"main")
+        print("upload complete")
     else:
         print("only database File!")
 
